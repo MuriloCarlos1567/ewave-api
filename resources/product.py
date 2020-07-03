@@ -64,7 +64,7 @@ class Product(Resource):
     arguments.add_argument('amount', type=int, required=True, help="The field 'amount' cannot be empty.")
     arguments.add_argument('description', type=str)
     arguments.add_argument('price', type=float, required=True, help="The product 'price' cannot be empty.")
-
+    
     def get(self, productId):
         product = ProductModel.find_product(productId)
         if product:
