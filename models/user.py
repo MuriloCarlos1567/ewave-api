@@ -14,13 +14,15 @@ class UserModel(db.Model):
     login = db.Column(db.String(40), nullable=False, unique=True)
     email = db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String, nullable=False)
-    confirmed = db.Column(db.Boolean, default=False)
+    confirmed = db.Column(db.Boolean, default=False) 
+    adminconfirmed = db.Column(db.Boolean, default=False) 
 
-    def __init__(self, login, email, password, confirmed):
+    def __init__(self, login, email, password, confirmed, adminconfirmed):
         self.login = login
         self.email = email
         self.password = password
         self.confirmed = confirmed
+        self.adminconfirmed = adminconfirmed
 
     def send_confirmation_email(self):
         link = request.url_root[:-1] + url_for('userconfirmed', userId=self.userId)
@@ -41,7 +43,8 @@ class UserModel(db.Model):
             'userId': self.userId,
             'login': self.login,
             'email': self.email,
-            'confirmed': self.confirmed
+            'confirmed': self.confirmed,
+            'adminconfirmed': self.adminconfirmed
         }
     
     @classmethod
@@ -63,6 +66,13 @@ class UserModel(db.Model):
         user = cls.query.filter_by(email=email).first()
         if user:
             return user
+        return None
+    
+    @classmethod
+    def check_password(cls, email):
+        user = cls.query.filter_by(email=email).first()
+        if user:
+            return user.password
         return None
     
     def save_user(self):
