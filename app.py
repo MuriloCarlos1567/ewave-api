@@ -3,7 +3,9 @@ from flask_restful import Api
 from blacklist import BLACKLIST
 from flask_jwt_extended import JWTManager
 from resources.product import Products, Product
-from resources.user import User, UserRegister, UserLogin, UserLogout, UserConfirmed
+from resources.user import User, UserRegister, UserLogin, UserLogout, UserConfirmed, AdminConfirm
+from resources.price import PriceCheck
+from resources.order import Order, Orders, NewOrder
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage.db'
@@ -32,6 +34,11 @@ api.add_resource(UserRegister, '/api/v1/register')
 api.add_resource(UserLogin, '/api/v1/login')
 api.add_resource(UserLogout, '/api/v1/logout')
 api.add_resource(UserConfirmed, '/api/v1/confirm/<int:userId>')
+api.add_resource(AdminConfirm, '/api/v1/admin/<int:userId>')
+api.add_resource(PriceCheck, '/api/v1/price')
+api.add_resource(Order, '/api/v1/orders/<int:orderId>')
+api.add_resource(Orders, '/api/v1/orders')
+api.add_resource(NewOrder, '/api/v1/buy')
 
 if __name__ == '__main__':
     from sql_alchemy import db
