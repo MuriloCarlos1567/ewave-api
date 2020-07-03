@@ -35,6 +35,14 @@ class ProductModel(db.Model):
             return product
         return None
     
+    @classmethod
+    def find_amount(cls, productId, orderAmount):
+        product = cls.query.filter_by(product=product).first()
+        if product:
+            if orderAmount <= product.amount:
+                return orderAmount
+            return None
+    
     def save_product(self):
         db.session.add(self)
         db.session.commit()
