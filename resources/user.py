@@ -7,12 +7,12 @@ from requests import post
 from blacklist import BLACKLIST
 from models.user import UserModel
 
-
 attributes = reqparse.RequestParser()
 attributes.add_argument('login', type=str, required=True, help="The 'login' field cannot be empty.")
 attributes.add_argument('email', type=str)
 attributes.add_argument('password', type=str, required=True, help="The 'password' field cannot be empty.")
 attributes.add_argument('confirmed', type=bool)
+attributes.add_argument('adminconfirmed', type=bool)
 
 class User(Resource):
     def get(self, userId):
@@ -46,6 +46,7 @@ class UserRegister(Resource):
         
         user = UserModel(**data)
         user.confirmed = False
+        user.adminconfirmed = False
         try:
             user.save_user()
             user.send_confirmation_email()
@@ -87,4 +88,16 @@ class UserConfirmed(Resource):
         user.save_user()
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('user_confirm.html', email=user.email, login=user.login), 200)
+
+class AdminConfirm(Resource):
+    @classmethod
+    def get(cls, userId):
+        user = UserModel.find_user(userId)
+
+        if not user:
+            return None
+        
+        user.adminconfirmed = True
+        user.save_user()
+        return {'message': 'Admin confirmed.'}, 200
 
