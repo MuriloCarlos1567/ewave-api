@@ -71,7 +71,7 @@ class Product(Resource):
             return product.json()
         return {'message': 'Product not found.'}, 404
     
-    @jwt_required
+    #@jwt_required
     def post(self, productId):
         if ProductModel.find_product(productId):
             return {"message": "Product id '{}' already exists.".format(productId)}, 400
