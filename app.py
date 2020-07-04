@@ -6,14 +6,20 @@ from resources.product import Products, Product
 from resources.user import User, UserRegister, UserLogin, UserLogout, UserConfirmed, AdminConfirm
 from resources.price import PriceCheck
 from resources.order import Order, Orders, NewOrder
+from sql_alchemy import db
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'asdoiwqejasdaskdjoasdj'
 app.config['JWT_BLACKLIST_ENABLED'] = True
+db.init_app(app)
 api = Api(app)
 jwt = JWTManager(app)
+
+@app.route('/')
+def index():
+    return '<h1>EWAVE API</h1>'
 
 @app.before_first_request
 def create_db():
@@ -39,8 +45,3 @@ api.add_resource(PriceCheck, '/api/v1/price')
 api.add_resource(Order, '/api/v1/orders/<int:orderId>')
 api.add_resource(Orders, '/api/v1/orders')
 api.add_resource(NewOrder, '/api/v1/buy')
-
-if __name__ == '__main__':
-    from sql_alchemy import db
-    db.init_app(app)
-    app.run(debug=True)
