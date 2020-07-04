@@ -16,7 +16,7 @@ class PriceCheck(Resource):
                 return {
                     'priceProduct': data['priceProduct'],
                     'priceAmount': data['priceAmount'],
-                    'finalPrice': finalPrice
+                    'finalPrice': "%.2f" % finalPrice
                 }
             return {"message": "Amount unavaliable. Only '{}' left in stock.".format(priceQuery['amount'])}
         return {'message': 'Product not found.'}, 404
